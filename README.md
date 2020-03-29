@@ -8,4 +8,4 @@ npm i
 
 npm run build
 
-you need to setup src/config/defines.js files with the links to MusicMatch API with the corresponding API Key
+you need to setup src/config/defines.js files with the links to MusicMatch API with and corresponding API Key
