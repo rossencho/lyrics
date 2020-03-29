@@ -1,5 +1,5 @@
 ReactJS application getting song lyrics
 
-using React hooks and Context application
+using React hooks and Context API
 
 **Installation**
