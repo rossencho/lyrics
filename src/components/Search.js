@@ -1,24 +1,25 @@
 import React, { useState, useEffect, useContext } from "react";
 import { TrackContext } from "../contexts/TrackContext";
-import axios from "axios";
-import { MUSICBOX_GET_TRACKS_URL } from "../config/defines";
+import { getTracks } from "../services/tracks";
 
 const Search = () => {
   const [state, dispatch] = useContext(TrackContext);
   const [userInput, setUserInput] = useState("");
   const [trackTitle, setTrackTitle] = useState("");
 
+  const loadTracks = async () => {
+    let res = await getTracks(trackTitle);
+    dispatch({
+      type: "GET_TRACKS",
+      payload: {
+        tracks: res.data.message.body.track_list,
+        heading: "Found results"
+      }
+    });
+  };
+
   useEffect(() => {
-    axios
-      .get(MUSICBOX_GET_TRACKS_URL.replace(/\{\%\w+\%\}/, trackTitle))
-      .then(res => {
-        const track_list = res.data.message.body.track_list;
-        dispatch({
-          type: "GET_TRACKS",
-          payload: { tracks: track_list, heading: "Found results" }
-        });
-      })
-      .catch(err => console.log(err));
+    loadTracks();
   }, [trackTitle]);
 
   const onChange = e => {

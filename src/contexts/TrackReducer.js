@@ -3,12 +3,15 @@ const TracksReducer = (state, action) => {
     case "GET_TRACKS":
       return {
         tracks: action.payload.tracks,
-        heading: action.payload.heading
+        heading: action.payload.heading,
+        trackIdSelected: -1
       };
-    // case "GET_LYRICS":
-    //   return {
-    //     lyrics: action.payload.lyrics
-    //   };
+    case "GET_LYRICS":
+      return {
+        tracks: [...state.tracks],
+        heading: state.heading,
+        trackIdSelected: action.payload.trackIdSelected
+      };
     default:
       return intialState;
   }

@@ -6,7 +6,7 @@ const TrackList = () => {
   const [state, dispatch] = useContext(TrackContext);
   const { tracks, heading } = state;
 
-  if (tracks.length) {
+  if (tracks !== undefined && tracks.length) {
     return (
       <div>
         <h3 className="text-center mb-4">{heading}</h3>

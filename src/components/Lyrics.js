@@ -1,33 +1,39 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import {
-  MUSICBOX_GET_LYRICS_URL,
-  MUSICBOX_GET_TRACK_URL
-} from "../config/defines";
+import React, { useState, useEffect, useContext } from "react";
+import { getLyrics, getTrackInfo } from "../services/tracks";
 import { Link } from "react-router-dom";
+import { TrackContext } from "../contexts/TrackContext";
 
 const Lyrics = props => {
+  const [state, dispatch] = useContext(TrackContext);
   const [track, setTrack] = useState({});
   const [lyrics, setLyrics] = useState({});
   const { id } = props.match.params;
 
-  useEffect(() => {
-    axios
-      .get(MUSICBOX_GET_LYRICS_URL.replace(/\{\%\w+\%\}/, id))
-      .then(res => {
-        setLyrics(res.data.message.body.lyrics);
-      })
-      .catch(err => console.log(err.message));
+  const loadLyrics = async () => {
+    let res = await getLyrics(id);
+    setLyrics(res.data.message.body.lyrics);
+  };
 
-    axios
-      .get(MUSICBOX_GET_TRACK_URL.replace(/\{\%\w+\%\}/, id))
-      .then(res => {
-        setTrack(res.data.message.body.track);
-      })
-      .catch(err => console.log(err.message));
+  const loadTrackInfo = async () => {
+    let res = await getTrackInfo(id);
+    setTrack(res.data.message.body.track);
+  };
+
+  useEffect(() => {
+    dispatch({
+      type: "GET_LYRICS",
+      payload: { trackIdSelected: id }
+    });
+    loadLyrics();
+    loadTrackInfo();
   }, [id]);
 
-  if (lyrics === undefined || Object.keys(lyrics).length === 0) {
+  if (
+    lyrics === undefined ||
+    Object.keys(lyrics).length === 0 ||
+    track === undefined ||
+    Object.keys(track).length === 0
+  ) {
     return <p>Loading...</p>;
   } else {
     return (
